@@ -32,3 +32,11 @@ theorem prop : ∀a b, a → b → a ∧ b :=
 
 def p := myterm["∀a b, a → b → a ∧ b"]
 #print p
+
+
+elab "#shell_ls" : command => do
+  logInfo "shell_ls"
+  let cmd: IO.Process.SpawnArgs := {cmd := "ls"}
+  let child <- IO.Process.spawn cmd
+
+#shell_ls
