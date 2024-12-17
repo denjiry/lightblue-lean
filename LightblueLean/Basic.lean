@@ -36,7 +36,20 @@ def p := myterm["∀a b, a → b → a ∧ b"]
 
 elab "#shell_ls" : command => do
   logInfo "shell_ls"
-  let cmd: IO.Process.SpawnArgs := {cmd := "ls"}
-  let child <- IO.Process.spawn cmd
+  let cmd: IO.Process.SpawnArgs := {cmd := "ls", args := #["-l"]}
+  let output <- IO.Process.output cmd
+  logInfo output.stdout
 
 #shell_ls
+
+elab "#shell" s:str+ : command => do
+  logInfo "shell"
+  let cmds := s.map TSyntax.getString
+  if cmds.size < 1 then
+    throwUnsupportedSyntax
+  let (cmd, args) := (cmds[0]!, cmds[1:])
+  let cmd: IO.Process.SpawnArgs := {cmd, args}
+  let output <- IO.Process.output cmd
+  logInfo output.stdout
+
+#shell "ls" "-l"
